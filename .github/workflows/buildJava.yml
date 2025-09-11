@@ -6,20 +6,16 @@ on:
 
 
 jobs:
- build:
-  runs-on: ubuntu-latest
-   
+ Build:
+  runs-on: ubuntu-latest 
 
   steps:
-  -name: checkout repository
-   uses: actions/checkout@v4
+   - uses: actions/checkout@v4
+   - uses: action/setup-java@v4
+     with: 
+       java-version: '21'
+       distribution: 'corretto'
 
-  -name: Setup Java
-   uses: action/setup-java@v4
-   with: 
-     java-version: '21'
-     distribution: 'temurin'
-
-  -name: Build with Maven
-   run: mvn -B package --file pom.xml
+   - name: Build with Maven
+     run: mvn -B package --file pom.xml
 
