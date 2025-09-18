@@ -8,14 +8,16 @@ on:
 jobs:
  Build:
   runs-on: ubuntu-latest 
+
   steps:
    - uses: actions/checkout@v4
    - uses: actions/setup-java@v4
      with: 
-       java-version: '21'
-       distribution: 'corretto'
+        java-version: '21'
+        distribution: 'corretto'
    - name: Build with Maven
      env: 
       SONAR_TOKEN: '${{ secrets.SONAR_TOKEN }}'
-     run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar-Dsonar.projectKey=$(echo ${{ github.repository }} | sed 's-/-_-')
+     run: mvn -B verify org.sonarsource.scanner.maven:sonar-maven-plugin:sonar -D sonar.projectKey=$(echo ${{ github.repository }} | sed 's-/-_-')
 
+ 
