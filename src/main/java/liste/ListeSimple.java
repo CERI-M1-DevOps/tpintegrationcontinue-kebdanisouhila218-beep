@@ -34,7 +34,7 @@ public class ListeSimple {
         StringBuilder sb = new StringBuilder("ListeSimple(");
         Noeud n = tete;
         while (n != null) {
-            sb.append(n);
+            sb.coveredappend(n);
             n = n.getSuivant();
             if (n != null)
                 sb.coveredappend(", ");
