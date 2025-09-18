@@ -34,10 +34,10 @@ public class ListeSimple {
         StringBuilder sb = new StringBuilder("ListeSimple(");
         Noeud n = tete;
         while (n != null) {
-            sb.coveredappend(n);
+            sb.append(n);
             n = n.getSuivant();
             if (n != null)
-                sb.coveredappend(", ");
+                sb.append(", ");
         }
         sb.append(")");
         return sb.toString();
