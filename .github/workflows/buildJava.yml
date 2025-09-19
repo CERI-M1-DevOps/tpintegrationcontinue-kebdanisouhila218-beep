@@ -1,21 +1,28 @@
-name: Java CI with Maven-Test and Sonar
+name: Java CI with Maven and SonarCloud
 
 on:
   pull_request:
     branches: [main]
+  push:
+    branches: [main]
 
 jobs:
-  Build:
+  build-and-sonar:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # 1️⃣ Récupérer le code
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      # 2️⃣ Installer Java
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
-          java-version: '21'
           distribution: 'corretto'
+          java-version: '21'
 
+      # 3️⃣ Cacher le repository Maven
       - name: Cache Maven repository
         uses: actions/cache@v4
         with:
@@ -24,6 +31,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
+      # 4️⃣ Cacher le cache Sonar
       - name: Cache SonarQube packages
         uses: actions/cache@v4
         with:
@@ -32,12 +40,18 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-sonar
 
-      - name: Build with Maven + Sonar
+      # 5️⃣ Build Maven + tests
+      - name: Build and test with Maven
+        run: mvn clean verify
+
+      # 6️⃣ Analyse SonarCloud
+      - name: Run SonarCloud analysis
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         run: |
-          mvn -B verify sonar:sonar \
-            -Dsonar.projectKey=${{ github.repository_owner }}_${{ github.repository }} \
+          mvn sonar:sonar \
+            -Dsonar.projectKey=CERI-M1-DevOps_tpintegrationcontinue-kebdanisouhila218-beep \
+            -Dsonar.organization=CERI-M1-DevOps \
             -Dsonar.host.url=https://sonarcloud.io \
             -Dsonar.login=$SONAR_TOKEN \
-            -Dsonar.branch.name=${{ github.head_ref }}
+            -Dsonar.branch.name=${{ github.head_ref || github.ref_name }}
