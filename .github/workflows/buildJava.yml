@@ -11,13 +11,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      # 1️⃣ Récupérer le code
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-java@v4
+      # 2️⃣ Installer Java
+      - name: Setup Java
+        uses: actions/setup-java@v4
         with:
           distribution: 'corretto'
           java-version: '21'
 
+      # 3️⃣ Cacher le repository Maven pour accélérer le build
       - name: Cache Maven repository
         uses: actions/cache@v4
         with:
@@ -26,5 +31,6 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
+      # 4️⃣ Build Maven + exécution des tests
       - name: Build and test with Maven
         run: mvn clean verify
