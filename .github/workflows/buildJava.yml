@@ -22,7 +22,7 @@ jobs:
           distribution: 'corretto'
           java-version: '21'
 
-      # 3️⃣ Cacher le repository Maven pour accélérer le build
+      # 3️⃣ Cacher le repository Maven
       - name: Cache Maven repository
         uses: actions/cache@v4
         with:
@@ -31,6 +31,15 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-maven-
 
-      # 4️⃣ Build Maven + exécution des tests
+      # 4️⃣ (Optionnel) Cacher le cache SonarQube
+      - name: Cache Sonar packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.sonar/cache
+          key: ${{ runner.os }}-sonar
+          restore-keys: |
+            ${{ runner.os }}-sonar
+
+      # 5️⃣ Build Maven + tests
       - name: Build and test with Maven
         run: mvn clean verify
